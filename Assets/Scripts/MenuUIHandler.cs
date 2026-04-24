@@ -10,11 +10,12 @@ using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(1000)]
 public class MenuUIHandler : MonoBehaviour
 {
+    public int mainSceneIndex = 1;
     public ColorPicker ColorPicker;
 
     public void NewColorSelected(Color color)
     {
-        // add code here to handle when a color is selected
+        MainManager.GetInstance().TeamColor = color;
     }
 
     private void Start()
@@ -22,25 +23,31 @@ public class MenuUIHandler : MonoBehaviour
         ColorPicker.Init();
         //this will call the NewColorSelected function when the color picker have a color button clicked.
         ColorPicker.onColorChanged += NewColorSelected;
+        ColorPicker.SelectColor(MainManager.GetInstance().TeamColor);
     }
 
     public void StartNew()
     {
-
+        SceneManager.LoadScene(mainSceneIndex);
     }
 
     public void Exit()
     {
-
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif         
     }
 
     public void SaveColorClicked()
     {
-
+        MainManager.GetInstance().SaveColor();
     }
 
     public void LoadColorClicked()
     {
-
+        MainManager.GetInstance().LoadColor();
+        ColorPicker.SelectColor(MainManager.GetInstance().TeamColor);
     }
 }

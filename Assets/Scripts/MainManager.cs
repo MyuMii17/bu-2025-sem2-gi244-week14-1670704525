@@ -27,16 +27,37 @@ public class MainManager : MonoBehaviour
     [System.Serializable]
     class SaveData
     {
-
+        public Color teamColor;
     }
 
     public void SaveColor()
     {
+        
+        string folder = Application.persistentDataPath;
+        string fileName = "savefile.json";
+        string fullPath = Path.Combine(folder, fileName);
+
+        SaveData data = new SaveData();
+        data.teamColor = TeamColor;
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(fullPath, json);
 
     }
 
     public void LoadColor()
     {
 
+        string folder = Application.persistentDataPath;
+        string fileName = "savefile.json";
+        string fullPath = Path.Combine(folder, fileName);
+
+        if(File.Exists(fullPath))
+        {
+            string json = File.ReadAllText(fullPath);
+
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            TeamColor = data.teamColor;
+        }
+        
     }
 }
